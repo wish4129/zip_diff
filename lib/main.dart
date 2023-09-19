@@ -1,26 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:zip_diff/drag_drop.dart';
 import 'package:archive/archive_io.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zip_diff/zip_first_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends ConsumerStatefulWidget {
+  const MyApp({super.key});
 
   @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  @override
   Widget build(BuildContext context) {
+    var zipOne = ref.watch(zipOneProvider);
+    var zipTwo = ref.watch(zipTwoProvider);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Center(
           child: Column(children: [
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                DragNDropWidget(text: 'Zip File 1'),
-                DragNDropWidget(text: 'Zip File 2'),
+                DragNDropWidget(index: 1, name: 'Zip 1'),
+                DragNDropWidget(index: 2, name: 'Zip 2'),
               ],
             ),
             Row(
@@ -28,17 +41,15 @@ class MyApp extends StatelessWidget {
                 Expanded(
                   child: Container(
                     height: 200,
-                    width: 200,
                     color: Colors.blue.withOpacity(0.4),
-                    child: const Center(child: Text('Diff')),
+                    child: Center(child: Text(zipOne['name'])),
                   ),
                 ),
                 Expanded(
                   child: Container(
                     height: 200,
-                    width: 200,
                     color: Colors.blue.withOpacity(0.4),
-                    child: const Center(child: Text('Diff')),
+                    child: Center(child: Text(zipTwo['name'])),
                   ),
                 ),
               ],
@@ -58,7 +69,8 @@ class MyApp extends StatelessWidget {
             List<String> files2 = [];
             for (var file in archive1.files) {
               if (file.isFile) {
-                print('archive1 ${file.name} ${file.lastModTime.toString()}');
+                debugPrint(
+                    'archive1 ${file.name} ${file.lastModTime.toString()}');
                 files1.add(file.name);
                 // final outputStream = OutputFileStream('out/${file.name}');
                 // file.writeContent(outputStream);
@@ -67,7 +79,8 @@ class MyApp extends StatelessWidget {
             }
             for (var file in archive2.files) {
               if (file.isFile) {
-                print('archive2 ${file.name} ${file.lastModTime.toString()}');
+                debugPrint(
+                    'archive2 ${file.name} ${file.lastModTime.toString()}');
                 files2.add(file.name);
                 // final outputStream = OutputFileStream('out/${file.name}');
                 // file.writeContent(outputStream);
