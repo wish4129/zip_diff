@@ -43,8 +43,8 @@ class _MyAppState extends ConsumerState<MyApp> {
               children: [
                 Expanded(
                   child: Container(
-                    height: 200,
-                    color: Colors.blue.withOpacity(0.4),
+                    height: 300,
+                    color: Colors.green.withOpacity(0.4),
                     child: Center(
                         child: ListView(children: [
                       for (var item in ref.watch(fileDiffProvider)['list1'])
@@ -54,7 +54,7 @@ class _MyAppState extends ConsumerState<MyApp> {
                 ),
                 Expanded(
                   child: Container(
-                    height: 200,
+                    height: 300,
                     color: Colors.blue.withOpacity(0.4),
                     child: Center(
                         child: ListView(children: [
