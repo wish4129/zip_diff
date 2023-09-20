@@ -36,10 +36,10 @@ class _DragNDropWidgetState extends ConsumerState<DragNDropWidget> {
         onDragEntered: (detail) => setState(() => _dragging = true),
         onDragExited: (detail) => setState(() => _dragging = false),
         child: Padding(
-          padding: const EdgeInsets.only(top: 20.0),
+          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
           child: SizedBox(
             width: 200,
-            height: 200,
+            height: 50,
             child: showNames(widget, _dragging),
           ),
         ));
