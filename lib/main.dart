@@ -40,6 +40,13 @@ class _MyAppState extends ConsumerState<MyApp> {
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                listDetails(1),
+                listDetails(2),
+              ],
+            ),
+            Row(
               children: [
                 Expanded(
                   child: Container(
