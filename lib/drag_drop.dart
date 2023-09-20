@@ -8,7 +8,12 @@ import 'package:zip_diff/zip_file_provider.dart';
 class DragNDropWidget extends ConsumerStatefulWidget {
   final int index;
   final String name;
-  const DragNDropWidget({Key? key, required this.index, required this.name})
+  final String display;
+  const DragNDropWidget(
+      {Key? key,
+      required this.index,
+      required this.name,
+      required this.display})
       : super(key: key);
 
   @override
@@ -17,64 +22,38 @@ class DragNDropWidget extends ConsumerStatefulWidget {
 
 class _DragNDropWidgetState extends ConsumerState<DragNDropWidget> {
   bool _dragging = false;
-
   @override
   Widget build(BuildContext context) {
     return DropTarget(
-      onDragDone: (detail) async {
-        debugPrint('onDragDone:');
-        if (widget.index == 1) {
-          ref.watch(zipOneProvider.notifier).updateName(detail.files[0].name);
-          // update file path
-          ref
-              .watch(zipOneProvider.notifier)
-              .updateFilePath(detail.files[0].path);
-          int number = await _getFileSize(detail.files[0].path);
-          debugPrint('number: $number');
-          ref.watch(zipOneProvider.notifier).updateSize(number);
-          ref
-              .watch(zipOneProvider.notifier)
-              .updateFilePath(detail.files[0].path);
-          ref.watch(zipOneProvider.notifier).updateLastModifiedTime(
-              (await detail.files[0].lastModified()).toIso8601String());
-        } else {
-          ref.watch(zipTwoProvider.notifier).updateName(detail.files[0].name);
-          // update file path
-          ref
-              .watch(zipTwoProvider.notifier)
-              .updateFilePath(detail.files[0].path);
-          int number = await _getFileSize(detail.files[0].path);
-          debugPrint('number: $number');
-          ref.watch(zipTwoProvider.notifier).updateSize(number);
-          ref
-              .watch(zipTwoProvider.notifier)
-              .updateFilePath(detail.files[0].path);
-          ref.watch(zipTwoProvider.notifier).updateLastModifiedTime(
-              (await detail.files[0].lastModified()).toIso8601String());
-        }
-        // for (final file in detail.files) {
-        //   debugPrint('  ${file.path} ${file.name}'
-        //       '  ${await file.lastModified()}'
-        //       '  ${await file.length()}'
-        //       '  ${file.mimeType}');
-        // }
-      },
-      onDragUpdated: (details) {
-        setState(() {});
-      },
-      onDragEntered: (detail) {
-        setState(() => _dragging = true);
-      },
-      onDragExited: (detail) {
-        setState(() => _dragging = false);
-      },
-      child: Container(
-          height: 200,
-          width: 200,
-          color: _dragging ? Colors.blue.withOpacity(0.4) : Colors.grey,
-          child: listDetails(widget.index, widget)),
-    );
+        onDragDone: (detail) async {
+          if (widget.index == 1) {
+            _updateProvider(zipOneProvider, ref, detail.files[0]);
+          } else {
+            _updateProvider(zipTwoProvider, ref, detail.files[0]);
+          }
+        },
+        onDragUpdated: (details) => setState(() {}),
+        onDragEntered: (detail) => setState(() => _dragging = true),
+        onDragExited: (detail) => setState(() => _dragging = false),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: SizedBox(
+            width: 200,
+            height: 200,
+            child: showNames(widget, _dragging),
+          ),
+        ));
   }
+}
+
+void _updateProvider(provider, ref, file) async {
+  ref.watch(provider.notifier).updateName(file.name);
+  ref.watch(provider.notifier).updateFilePath(file.path);
+  ref.watch(provider.notifier).updateSize(await _getFileSize(file.path));
+  ref.watch(provider.notifier).updateFilePath(file.path);
+  ref
+      .watch(provider.notifier)
+      .updateLastModifiedTime((await file.lastModified()).toIso8601String());
 }
 
 Future<int> _getFileSize(String path) async {
@@ -98,6 +77,42 @@ String _formatFileSize(int fileSizeInBytes) {
     return '${(fileSizeInBytes / kilobyte).toStringAsFixed(2)} KB';
   } else {
     return '$fileSizeInBytes bytes';
+  }
+}
+
+Widget showNames(DragNDropWidget widget, bool dragging) {
+  if (widget.index == 1) {
+    return Consumer(builder: (context, ref, child) {
+      var zipOne = ref.watch(zipOneProvider);
+      return TextField(
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          labelText: 'Zip ${widget.index}',
+        ),
+        readOnly: true,
+        controller: TextEditingController(
+          text: zipOne['name'] != ''
+              ? zipOne['name']
+              : (dragging ? 'Drop here' : zipOne['name']),
+        ),
+      );
+    });
+  } else {
+    return Consumer(builder: (context, ref, child) {
+      var zipTwo = ref.watch(zipTwoProvider);
+      return TextField(
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          labelText: 'Zip ${widget.index}',
+        ),
+        readOnly: true,
+        controller: TextEditingController(
+          text: zipTwo['name'] != ''
+              ? zipTwo['name']
+              : (dragging ? 'Drop here' : zipTwo['name']),
+        ),
+      );
+    });
   }
 }
 

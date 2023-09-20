@@ -30,11 +30,13 @@ class _MyAppState extends ConsumerState<MyApp> {
       home: Scaffold(
         body: Center(
           child: Column(children: [
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                DragNDropWidget(index: 1, name: 'Zip 1'),
-                DragNDropWidget(index: 2, name: 'Zip 2'),
+                DragNDropWidget(
+                    index: 1, name: 'Drop zip here', display: zipOne['name']),
+                DragNDropWidget(
+                    index: 2, name: 'Drop zip here', display: zipTwo['name']),
               ],
             ),
             Row(
