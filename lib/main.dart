@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:zip_diff/drag_drop.dart';
 import 'package:archive/archive_io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zip_diff/zip_first_provider.dart';
+import 'package:zip_diff/file_dff_provider.dart';
+import 'package:zip_diff/zip_file_provider.dart';
 
 void main() {
   runApp(
@@ -42,14 +43,22 @@ class _MyAppState extends ConsumerState<MyApp> {
                   child: Container(
                     height: 200,
                     color: Colors.blue.withOpacity(0.4),
-                    child: Center(child: Text(zipOne['name'])),
+                    child: Center(
+                        child: ListView(children: [
+                      for (var item in ref.watch(fileDiffProvider)['list1'])
+                        Text(item),
+                    ])),
                   ),
                 ),
                 Expanded(
                   child: Container(
                     height: 200,
                     color: Colors.blue.withOpacity(0.4),
-                    child: Center(child: Text(zipTwo['name'])),
+                    child: Center(
+                        child: ListView(children: [
+                      for (var item in ref.watch(fileDiffProvider)['list2'])
+                        Text(item),
+                    ])),
                   ),
                 ),
               ],
@@ -85,9 +94,7 @@ class _MyAppState extends ConsumerState<MyApp> {
                 // outputStream.close();
               }
             }
-            final zz = compareArrays(files1, files2);
-            print(zz[0]);
-            print(zz[1]);
+            compareArrays(files1, files2, ref);
           },
           backgroundColor: Colors.green,
           child: const Icon(Icons.compare),
@@ -97,7 +104,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   }
 }
 
-List<List<String>> compareArrays(List<String> files1, List<String> files2) {
+void compareArrays(List<String> files1, List<String> files2, WidgetRef ref) {
   List<String> array1 = [];
   List<String> array2 = [];
 
@@ -112,6 +119,5 @@ List<List<String>> compareArrays(List<String> files1, List<String> files2) {
       array2.add(file);
     }
   }
-
-  return [array1, array2];
+  ref.read(fileDiffProvider.notifier).updateList(array1, array2);
 }
