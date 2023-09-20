@@ -54,8 +54,10 @@ class _MyAppState extends ConsumerState<MyApp> {
                     color: Colors.green.withOpacity(0.4),
                     child: Center(
                         child: ListView(children: [
+                      for (var item in ref.watch(fileDiffProvider)['ori1'])
+                        ListTile(title: Text(item)),
                       for (var item in ref.watch(fileDiffProvider)['list1'])
-                        Text(item),
+                        ListTile(title: Text('* $item'))
                     ])),
                   ),
                 ),
@@ -65,8 +67,10 @@ class _MyAppState extends ConsumerState<MyApp> {
                     color: Colors.blue.withOpacity(0.4),
                     child: Center(
                         child: ListView(children: [
+                      for (var item in ref.watch(fileDiffProvider)['ori2'])
+                        ListTile(title: Text(item)),
                       for (var item in ref.watch(fileDiffProvider)['list2'])
-                        Text(item),
+                        ListTile(title: Text('* $item'))
                     ])),
                   ),
                 ),
@@ -76,35 +80,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            final file1InputStream = InputFileStream(zipOne['file_path']);
-            final archive1 = ZipDecoder().decodeBuffer(file1InputStream);
-            final file2InputStream = InputFileStream(zipTwo['file_path']);
-            final archive2 = ZipDecoder().decodeBuffer(file2InputStream);
-            List<String> files1 = [];
-            List<String> files2 = [];
-            for (var file in archive1.files) {
-              if (file.isFile) {
-                debugPrint(
-                    'archive1 ${file.name} ${file.lastModTime.toString()}');
-                files1.add(file.name);
-                // final outputStream = OutputFileStream('out/${file.name}');
-                // file.writeContent(outputStream);
-                // outputStream.close();
-              }
-            }
-            for (var file in archive2.files) {
-              if (file.isFile) {
-                debugPrint(
-                    'archive2 ${file.name} ${file.lastModTime.toString()}');
-                files2.add(file.name);
-                // final outputStream = OutputFileStream('out/${file.name}');
-                // file.writeContent(outputStream);
-                // outputStream.close();
-              }
-            }
-            compareArrays(files1, files2, ref);
-          },
+          onPressed: () => onPressed(zipOne, zipTwo, ref),
           backgroundColor: Colors.green,
           child: const Icon(Icons.compare),
         ),
@@ -113,20 +89,54 @@ class _MyAppState extends ConsumerState<MyApp> {
   }
 }
 
-void compareArrays(List<String> files1, List<String> files2, WidgetRef ref) {
+void onPressed(zipOne, zipTwo, WidgetRef ref) {
+  final file1InputStream = InputFileStream(zipOne['file_path']);
+  final archive1 = ZipDecoder().decodeBuffer(file1InputStream);
+  final file2InputStream = InputFileStream(zipTwo['file_path']);
+  final archive2 = ZipDecoder().decodeBuffer(file2InputStream);
+  List<String> files1 = [];
+  List<String> files2 = [];
+  for (var file in archive1.files) {
+    if (file.isFile) {
+      files1.add(file.name);
+    }
+  }
+  for (var file in archive2.files) {
+    if (file.isFile) {
+      files2.add(file.name);
+    }
+  }
+
+  List<String> ori1 = [];
+  List<String> ori2 = [];
   List<String> array1 = [];
   List<String> array2 = [];
 
   for (var file in files1) {
     if (!files2.contains(file)) {
       array1.add(file);
+    } else {
+      ori1.add(file);
     }
   }
 
   for (var file in files2) {
     if (!files1.contains(file)) {
       array2.add(file);
+    } else {
+      ori2.add(file);
     }
   }
-  ref.read(fileDiffProvider.notifier).updateList(array1, array2);
+
+  var date1 = DateTime.parse(ref.watch(zipOneProvider)['last_modified_time']);
+  var date2 = DateTime.parse(ref.watch(zipTwoProvider)['last_modified_time']);
+  bool isNewer;
+  if (date1.isAfter(date2)) {
+    isNewer = true;
+  } else {
+    isNewer = false;
+  }
+  ref
+      .read(fileDiffProvider.notifier)
+      .updateList(ori1, ori2, array1, array2, isNewer);
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zip_diff/file_dff_provider.dart';
 import 'package:zip_diff/zip_file_provider.dart';
 
 class DragNDropWidget extends ConsumerStatefulWidget {
@@ -119,25 +120,29 @@ Widget showNames(DragNDropWidget widget, bool dragging) {
 Widget listDetails(int index) {
   if (index == 1) {
     return Consumer(builder: (context, ref, child) {
+      var fileDiff = ref.watch(fileDiffProvider);
       var zipOne = ref.watch(zipOneProvider);
       return Column(
         children: [
-          Text(zipOne['name'] ?? ' bla '),
-          Text(zipOne['file_path'] ?? ' no file'),
-          Text(zipOne['last_modified_time']),
-          Text(zipOne['size'] != 0 ? _formatFileSize(zipOne['size']) : '0'),
+          // Text(zipOne['name'] ?? ' bla '),
+          // Text(zipOne['file_path'] ?? ' no file'),
+          Text(
+              '${zipOne['last_modified_time']} ${fileDiff['isNewer'] == true ? 'Newer' : ''}'),
+          // Text(zipOne['size'] != 0 ? _formatFileSize(zipOne['size']) : '0'),
         ],
       );
     });
   } else {
     return Consumer(builder: (context, ref, child) {
+      var fileDiff = ref.watch(fileDiffProvider);
       var zipTwo = ref.watch(zipTwoProvider);
       return Column(
         children: [
-          Text(zipTwo['name'] ?? ' bla '),
-          Text(zipTwo['file_path'] ?? ' no file'),
-          Text(zipTwo['last_modified_time']),
-          Text(zipTwo['size'] != 0 ? _formatFileSize(zipTwo['size']) : '0'),
+          // Text(zipTwo['name'] ?? ' bla '),
+          // Text(zipTwo['file_path'] ?? ' no file'),
+          Text(
+              '${zipTwo['last_modified_time']} ${fileDiff['isNewer'] == false ? 'Newer' : ''}'),
+          // Text(zipTwo['size'] != 0 ? _formatFileSize(zipTwo['size']) : '0'),
         ],
       );
     });
