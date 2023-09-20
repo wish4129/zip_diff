@@ -29,7 +29,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       home: Scaffold(
         body: Center(
           child: Column(children: [
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 DragNDropWidget(index: 1, name: 'Zip 1'),
@@ -59,11 +59,9 @@ class _MyAppState extends ConsumerState<MyApp> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            final file1InputStream = InputFileStream(
-                '/Users/munkevin/Desktop/Sirius Code/SwpSql_1.0.6.zip');
+            final file1InputStream = InputFileStream(zipOne['file_path']);
             final archive1 = ZipDecoder().decodeBuffer(file1InputStream);
-            final file2InputStream = InputFileStream(
-                '/Users/munkevin/Desktop/Sirius Code/SwpSql_1.0.7.zip');
+            final file2InputStream = InputFileStream(zipTwo['file_path']);
             final archive2 = ZipDecoder().decodeBuffer(file2InputStream);
             List<String> files1 = [];
             List<String> files2 = [];

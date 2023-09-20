@@ -7,8 +7,8 @@ import 'package:zip_diff/zip_first_provider.dart';
 
 class DragNDropWidget extends ConsumerStatefulWidget {
   final int index;
-  String name;
-  DragNDropWidget({Key? key, required this.index, required this.name})
+  final String name;
+  const DragNDropWidget({Key? key, required this.index, required this.name})
       : super(key: key);
 
   @override
@@ -32,6 +32,9 @@ class _DragNDropWidgetState extends ConsumerState<DragNDropWidget> {
           int number = await _getFileSize(detail.files[0].path);
           debugPrint('number: $number');
           ref.watch(zipOneProvider.notifier).updateSize(number);
+          ref
+              .watch(zipOneProvider.notifier)
+              .updateFilePath(detail.files[0].path);
         } else {
           ref.watch(zipTwoProvider.notifier).updateName(detail.files[0].name);
           // update file path
@@ -41,6 +44,9 @@ class _DragNDropWidgetState extends ConsumerState<DragNDropWidget> {
           int number = await _getFileSize(detail.files[0].path);
           debugPrint('number: $number');
           ref.watch(zipTwoProvider.notifier).updateSize(number);
+          ref
+              .watch(zipTwoProvider.notifier)
+              .updateFilePath(detail.files[0].path);
         }
         // for (final file in detail.files) {
         //   debugPrint('  ${file.path} ${file.name}'
@@ -72,7 +78,7 @@ Future<int> _getFileSize(String path) async {
   return fileBytes.lengthInBytes;
 }
 
-String formatFileSize(int fileSizeInBytes) {
+String _formatFileSize(int fileSizeInBytes) {
   const int kilobyte = 1024;
   const int megabyte = kilobyte * 1024;
   const int gigabyte = megabyte * 1024;
@@ -99,7 +105,7 @@ Widget listDetails(int index, DragNDropWidget widget) {
         children: [
           Text(zipOne['name'] != '' ? zipOne['name'] : widget.name),
           Text(zipOne['file_path']),
-          Text(formatFileSize(zipOne['size'])),
+          Text(_formatFileSize(zipOne['size'])),
         ],
       );
     });
@@ -110,7 +116,7 @@ Widget listDetails(int index, DragNDropWidget widget) {
         children: [
           Text(zipTwo['name'] != '' ? zipTwo['name'] : widget.name),
           Text(zipTwo['file_path']),
-          Text(formatFileSize(zipTwo['size'])),
+          Text(_formatFileSize(zipTwo['size'])),
         ],
       );
     });
