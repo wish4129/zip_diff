@@ -35,6 +35,8 @@ class _DragNDropWidgetState extends ConsumerState<DragNDropWidget> {
           ref
               .watch(zipOneProvider.notifier)
               .updateFilePath(detail.files[0].path);
+          ref.watch(zipOneProvider.notifier).updateLastModifiedTime(
+              (await detail.files[0].lastModified()).toIso8601String());
         } else {
           ref.watch(zipTwoProvider.notifier).updateName(detail.files[0].name);
           // update file path
@@ -47,6 +49,8 @@ class _DragNDropWidgetState extends ConsumerState<DragNDropWidget> {
           ref
               .watch(zipTwoProvider.notifier)
               .updateFilePath(detail.files[0].path);
+          ref.watch(zipTwoProvider.notifier).updateLastModifiedTime(
+              (await detail.files[0].lastModified()).toIso8601String());
         }
         // for (final file in detail.files) {
         //   debugPrint('  ${file.path} ${file.name}'
@@ -104,7 +108,8 @@ Widget listDetails(int index, DragNDropWidget widget) {
       return Column(
         children: [
           Text(zipOne['name'] != '' ? zipOne['name'] : widget.name),
-          Text(zipOne['file_path']),
+          Text(zipOne['file_path'] != '' ? zipOne['file_path'] : 'Drag file'),
+          Text(zipOne['last_modified_time']),
           Text(_formatFileSize(zipOne['size'])),
         ],
       );
@@ -115,7 +120,8 @@ Widget listDetails(int index, DragNDropWidget widget) {
       return Column(
         children: [
           Text(zipTwo['name'] != '' ? zipTwo['name'] : widget.name),
-          Text(zipTwo['file_path']),
+          Text(zipTwo['file_path'] != '' ? zipTwo['file_path'] : 'Drag file'),
+          Text(zipTwo['last_modified_time']),
           Text(_formatFileSize(zipTwo['size'])),
         ],
       );
