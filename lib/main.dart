@@ -108,10 +108,10 @@ class _MyAppState extends ConsumerState<MyApp> {
             )
           ]),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () => onPressed(zipOne, zipTwo, ref),
-          backgroundColor: Colors.green,
+          backgroundColor: const Color.fromARGB(255, 252, 185, 56),
           child: const Icon(Icons.compare),
         ),
       ),
