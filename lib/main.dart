@@ -79,7 +79,7 @@ class _MyAppState extends ConsumerState<MyApp> {
                       padding: const EdgeInsets.only(right: 10.0),
                       color: Colors.green.withOpacity(0.4),
                       child: ListView(shrinkWrap: true, children: [
-                        for (var item in ref.watch(fileDiffProvider)['ori1'])
+                        for (var item in ref.watch(fileDiffProvider)['common'])
                           ListTile(title: Text(item)),
                         for (var item in ref.watch(fileDiffProvider)['list1'])
                           ListTile(title: Text('* $item'))
@@ -92,7 +92,7 @@ class _MyAppState extends ConsumerState<MyApp> {
                       padding: const EdgeInsets.only(left: 10.0),
                       color: Colors.blue.withOpacity(0.4),
                       child: ListView(shrinkWrap: true, children: [
-                        for (var item in ref.watch(fileDiffProvider)['ori2'])
+                        for (var item in ref.watch(fileDiffProvider)['common'])
                           ListTile(title: Text(item)),
                         for (var item in ref.watch(fileDiffProvider)['list2'])
                           ListTile(title: Text('* $item'))
@@ -129,27 +129,22 @@ void onPressed(zipOne, zipTwo, WidgetRef ref) {
       .map((file) => file.name)
       .toList();
 
-  List<String> ori1 = [];
-  List<String> ori2 = [];
-  List<String> array1 = [];
-  List<String> array2 = [];
+  List<String> unique1 = [];
+  List<String> unique2 = [];
 
   for (var file in files1) {
     if (!files2.contains(file)) {
-      array1.add(file);
-    } else {
-      ori1.add(file);
+      unique1.add(file);
     }
   }
 
   for (var file in files2) {
     if (!files1.contains(file)) {
-      array2.add(file);
-    } else {
-      ori2.add(file);
+      unique2.add(file);
     }
   }
 
+  List<String> common = getSimilarFiles(archive1.files, archive2.files);
   var date1 = DateTime.parse(ref.watch(zipOneProvider)['last_modified_time']);
   var date2 = DateTime.parse(ref.watch(zipTwoProvider)['last_modified_time']);
   int whoIsNewer;
@@ -160,5 +155,24 @@ void onPressed(zipOne, zipTwo, WidgetRef ref) {
   }
   ref
       .read(fileDiffProvider.notifier)
-      .updateList(ori1, ori2, array1, array2, whoIsNewer);
+      .updateList(files1, files2, common, unique1, unique2, whoIsNewer);
+}
+
+List<String> getSimilarFiles(
+    List<ArchiveFile> files1, List<ArchiveFile> files2) {
+  List<String> filesC = [];
+
+  final map1 = {for (var file in files1) file.name: file};
+  final map2 = {for (var file in files2) file.name: file};
+
+  for (var name in map1.keys) {
+    if (map2.containsKey(name)) {
+      ArchiveFile file1 = map1[name]!;
+      ArchiveFile file2 = map2[name]!;
+      if (file1.lastModTime == file2.lastModTime) {
+        filesC.add(name);
+      }
+    }
+  }
+  return filesC;
 }

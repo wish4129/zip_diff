@@ -3,14 +3,22 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 class FileDiff extends Notifier<dynamic> {
   @override
   dynamic build() {
-    return {'ori1': [], 'ori2': [], 'list1': [], 'list2': [], 'whoIsNewer': 0};
+    return {
+      'ori1': [],
+      'ori2': [],
+      'common': [],
+      'list1': [],
+      'list2': [],
+      'whoIsNewer': 0
+    };
   }
 
-  updateList(List<String> ori1, List<String> ori2, List<String> list1,
-      List<String> list2, int whoIsNewer) {
+  updateList(List<String> ori1, List<String> ori2, List<String> common,
+      List<String> list1, List<String> list2, int whoIsNewer) {
     state = {
       'ori1': ori1,
       'ori2': ori2,
+      'common': common,
       'list1': list1,
       'list2': list2,
       'whoIsNewer': whoIsNewer
@@ -21,6 +29,7 @@ class FileDiff extends Notifier<dynamic> {
     return {
       'ori1': state['ori1'],
       'ori2': state['ori2'],
+      'common': state['common'],
       'list1': state['list1'],
       'list2': state['list2'],
       'whoIsNewer': whoIsNewer
@@ -31,6 +40,7 @@ class FileDiff extends Notifier<dynamic> {
     return {
       'ori1': state['ori1'],
       'ori2': state['ori2'],
+      'common': state['common'],
       'list1': list,
       'list2': state['list2'],
       'whoIsNewer': state['whoIsNewer']
@@ -41,6 +51,7 @@ class FileDiff extends Notifier<dynamic> {
     return {
       'ori1': state['ori1'],
       'ori2': state['ori2'],
+      'common': state['common'],
       'list1': state['list1'],
       'list2': list,
       'whoIsNewer': state['whoIsNewer']
