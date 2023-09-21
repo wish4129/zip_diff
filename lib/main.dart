@@ -39,39 +39,74 @@ class _MyAppState extends ConsumerState<MyApp> {
                     index: 2, name: 'Drop zip here', display: zipTwo['name']),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                listDetails(1),
-                listDetails(2),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Table(
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                border: TableBorder.all(),
+                children: [
+                  TableRow(
+                    children: [
+                      const Text('Name'),
+                      Text(zipOne['name']),
+                      Text(zipTwo['name']),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      const Text('Size'),
+                      Text(formatFileSize(zipOne['size'])),
+                      Text(formatFileSize(zipTwo['size'])),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      const Text('Last Modified Time'),
+                      Text(zipOne['last_modified_time']),
+                      Text(zipTwo['last_modified_time']),
+                    ],
+                  ),
+                ],
+              ),
             ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+
+            //     // listDetails(1),
+            //     // listDetails(2),
+            //   ],
+            // ),
             Row(
               children: [
                 Expanded(
                   child: Container(
-                    height: 300,
                     color: Colors.green.withOpacity(0.4),
                     child: Center(
-                        child: ListView(children: [
-                      for (var item in ref.watch(fileDiffProvider)['ori1'])
-                        ListTile(title: Text(item)),
-                      for (var item in ref.watch(fileDiffProvider)['list1'])
-                        ListTile(title: Text('* $item'))
-                    ])),
+                        child: ListView(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: [
+                          for (var item in ref.watch(fileDiffProvider)['ori1'])
+                            ListTile(title: Text(item)),
+                          for (var item in ref.watch(fileDiffProvider)['list1'])
+                            ListTile(title: Text('* $item'))
+                        ])),
                   ),
                 ),
                 Expanded(
                   child: Container(
-                    height: 300,
                     color: Colors.blue.withOpacity(0.4),
                     child: Center(
-                        child: ListView(children: [
-                      for (var item in ref.watch(fileDiffProvider)['ori2'])
-                        ListTile(title: Text(item)),
-                      for (var item in ref.watch(fileDiffProvider)['list2'])
-                        ListTile(title: Text('* $item'))
-                    ])),
+                        child: ListView(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: [
+                          for (var item in ref.watch(fileDiffProvider)['ori2'])
+                            ListTile(title: Text(item)),
+                          for (var item in ref.watch(fileDiffProvider)['list2'])
+                            ListTile(title: Text('* $item'))
+                        ])),
                   ),
                 ),
               ],

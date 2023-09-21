@@ -62,7 +62,7 @@ Future<int> _getFileSize(String path) async {
   return fileBytes.lengthInBytes;
 }
 
-String _formatFileSize(int fileSizeInBytes) {
+String formatFileSize(int fileSizeInBytes) {
   const int kilobyte = 1024;
   const int megabyte = kilobyte * 1024;
   const int gigabyte = megabyte * 1024;
