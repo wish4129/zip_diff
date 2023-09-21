@@ -69,39 +69,38 @@ class _MyAppState extends ConsumerState<MyApp> {
                 ],
               ),
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    color: Colors.green.withOpacity(0.4),
-                    child: Center(
-                        child: ListView(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: [
-                          for (var item in ref.watch(fileDiffProvider)['ori1'])
-                            ListTile(title: Text(item)),
-                          for (var item in ref.watch(fileDiffProvider)['list1'])
-                            ListTile(title: Text('* $item'))
-                        ])),
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 400,
+                      padding: const EdgeInsets.only(right: 10.0),
+                      color: Colors.green.withOpacity(0.4),
+                      child: ListView(shrinkWrap: true, children: [
+                        for (var item in ref.watch(fileDiffProvider)['ori1'])
+                          ListTile(title: Text(item)),
+                        for (var item in ref.watch(fileDiffProvider)['list1'])
+                          ListTile(title: Text('* $item'))
+                      ]),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Container(
-                    color: Colors.blue.withOpacity(0.4),
-                    child: Center(
-                        child: ListView(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: [
-                          for (var item in ref.watch(fileDiffProvider)['ori2'])
-                            ListTile(title: Text(item)),
-                          for (var item in ref.watch(fileDiffProvider)['list2'])
-                            ListTile(title: Text('* $item'))
-                        ])),
+                  Expanded(
+                    child: Container(
+                      height: 400,
+                      padding: const EdgeInsets.only(left: 10.0),
+                      color: Colors.blue.withOpacity(0.4),
+                      child: ListView(shrinkWrap: true, children: [
+                        for (var item in ref.watch(fileDiffProvider)['ori2'])
+                          ListTile(title: Text(item)),
+                        for (var item in ref.watch(fileDiffProvider)['list2'])
+                          ListTile(title: Text('* $item'))
+                      ]),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           ]),
         ),
@@ -121,18 +120,14 @@ void onPressed(zipOne, zipTwo, WidgetRef ref) {
   final archive1 = ZipDecoder().decodeBuffer(file1InputStream);
   final file2InputStream = InputFileStream(zipTwo['file_path']);
   final archive2 = ZipDecoder().decodeBuffer(file2InputStream);
-  List<String> files1 = [];
-  List<String> files2 = [];
-  for (var file in archive1.files) {
-    if (file.isFile) {
-      files1.add(file.name);
-    }
-  }
-  for (var file in archive2.files) {
-    if (file.isFile) {
-      files2.add(file.name);
-    }
-  }
+  List<String> files1 = archive1.files
+      .where((file) => file.isFile)
+      .map((file) => file.name)
+      .toList();
+  List<String> files2 = archive2.files
+      .where((file) => file.isFile)
+      .map((file) => file.name)
+      .toList();
 
   List<String> ori1 = [];
   List<String> ori2 = [];
