@@ -117,37 +117,7 @@ Widget showNames(DragNDropWidget widget, bool dragging) {
   }
 }
 
-Widget listDetails(int index) {
-  if (index == 1) {
-    return Consumer(builder: (context, ref, child) {
-      // var fileDiff = ref.watch(fileDiffProvider);
-      // var zipOne = ref.watch(zipOneProvider);
-      return Column(
-        children: [
-          // Text(zipOne['name'] ?? ' bla '),
-          // Text(zipOne['file_path'] ?? ' no file'),
-          _getDisplayOne(),
-          // Text(zipOne['size'] != 0 ? _formatFileSize(zipOne['size']) : '0'),
-        ],
-      );
-    });
-  } else {
-    return Consumer(builder: (context, ref, child) {
-      // var fileDiff = ref.watch(fileDiffProvider);
-      // var zipTwo = ref.watch(zipTwoProvider);
-      return Column(
-        children: [
-          // Text(zipTwo['name'] ?? ' bla '),
-          // Text(zipTwo['file_path'] ?? ' no file'),
-          _getDisplayTwo(),
-          // Text(zipTwo['size'] != 0 ? _formatFileSize(zipTwo['size']) : '0'),
-        ],
-      );
-    });
-  }
-}
-
-Widget _getDisplayOne() {
+Widget getDisplayOne() {
   return Consumer(builder: (context, ref, child) {
     var fileDiff = ref.watch(fileDiffProvider);
     var zipOne = ref.watch(zipOneProvider);
@@ -159,7 +129,7 @@ Widget _getDisplayOne() {
   });
 }
 
-Widget _getDisplayTwo() {
+Widget getDisplayTwo() {
   return Consumer(builder: (context, ref, child) {
     var fileDiff = ref.watch(fileDiffProvider);
     var zipTwo = ref.watch(zipTwoProvider);

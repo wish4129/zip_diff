@@ -62,21 +62,13 @@ class _MyAppState extends ConsumerState<MyApp> {
                   TableRow(
                     children: [
                       const Text('Last Modified Time'),
-                      Text(zipOne['last_modified_time']),
-                      Text(zipTwo['last_modified_time']),
+                      getDisplayOne(),
+                      getDisplayTwo(),
                     ],
                   ),
                 ],
               ),
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-
-            //     // listDetails(1),
-            //     // listDetails(2),
-            //   ],
-            // ),
             Row(
               children: [
                 Expanded(
