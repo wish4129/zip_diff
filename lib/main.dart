@@ -130,13 +130,13 @@ void onPressed(zipOne, zipTwo, WidgetRef ref) {
 
   var date1 = DateTime.parse(ref.watch(zipOneProvider)['last_modified_time']);
   var date2 = DateTime.parse(ref.watch(zipTwoProvider)['last_modified_time']);
-  bool isNewer;
+  int whoIsNewer;
   if (date1.isAfter(date2)) {
-    isNewer = true;
+    whoIsNewer = 1;
   } else {
-    isNewer = false;
+    whoIsNewer = 2;
   }
   ref
       .read(fileDiffProvider.notifier)
-      .updateList(ori1, ori2, array1, array2, isNewer);
+      .updateList(ori1, ori2, array1, array2, whoIsNewer);
 }

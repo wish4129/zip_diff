@@ -3,27 +3,27 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 class FileDiff extends Notifier<dynamic> {
   @override
   dynamic build() {
-    return {'ori1': [], 'ori2': [], 'list1': [], 'list2': [], 'isNewer': false};
+    return {'ori1': [], 'ori2': [], 'list1': [], 'list2': [], 'whoIsNewer': 0};
   }
 
   updateList(List<String> ori1, List<String> ori2, List<String> list1,
-      List<String> list2, bool isNewer) {
+      List<String> list2, int whoIsNewer) {
     state = {
       'ori1': ori1,
       'ori2': ori2,
       'list1': list1,
       'list2': list2,
-      'isNewer': isNewer
+      'whoIsNewer': whoIsNewer
     };
   }
 
-  updateIsNewer(bool isNewer) {
+  updateIsNewer(int whoIsNewer) {
     return {
       'ori1': state['ori1'],
       'ori2': state['ori2'],
       'list1': state['list1'],
       'list2': state['list2'],
-      'isNewer': isNewer
+      'whoIsNewer': whoIsNewer
     };
   }
 
@@ -33,7 +33,7 @@ class FileDiff extends Notifier<dynamic> {
       'ori2': state['ori2'],
       'list1': list,
       'list2': state['list2'],
-      'isNewer': state['isNewer']
+      'whoIsNewer': state['whoIsNewer']
     };
   }
 
@@ -43,7 +43,7 @@ class FileDiff extends Notifier<dynamic> {
       'ori2': state['ori2'],
       'list1': state['list1'],
       'list2': list,
-      'isNewer': state['isNewer']
+      'whoIsNewer': state['whoIsNewer']
     };
   }
 }

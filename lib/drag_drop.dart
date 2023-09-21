@@ -120,31 +120,53 @@ Widget showNames(DragNDropWidget widget, bool dragging) {
 Widget listDetails(int index) {
   if (index == 1) {
     return Consumer(builder: (context, ref, child) {
-      var fileDiff = ref.watch(fileDiffProvider);
-      var zipOne = ref.watch(zipOneProvider);
+      // var fileDiff = ref.watch(fileDiffProvider);
+      // var zipOne = ref.watch(zipOneProvider);
       return Column(
         children: [
           // Text(zipOne['name'] ?? ' bla '),
           // Text(zipOne['file_path'] ?? ' no file'),
-          Text(
-              '${zipOne['last_modified_time']} ${fileDiff['isNewer'] == true ? 'Newer' : ''}'),
+          _getDisplayOne(),
           // Text(zipOne['size'] != 0 ? _formatFileSize(zipOne['size']) : '0'),
         ],
       );
     });
   } else {
     return Consumer(builder: (context, ref, child) {
-      var fileDiff = ref.watch(fileDiffProvider);
-      var zipTwo = ref.watch(zipTwoProvider);
+      // var fileDiff = ref.watch(fileDiffProvider);
+      // var zipTwo = ref.watch(zipTwoProvider);
       return Column(
         children: [
           // Text(zipTwo['name'] ?? ' bla '),
           // Text(zipTwo['file_path'] ?? ' no file'),
-          Text(
-              '${zipTwo['last_modified_time']} ${fileDiff['isNewer'] == false ? 'Newer' : ''}'),
+          _getDisplayTwo(),
           // Text(zipTwo['size'] != 0 ? _formatFileSize(zipTwo['size']) : '0'),
         ],
       );
     });
   }
+}
+
+Widget _getDisplayOne() {
+  return Consumer(builder: (context, ref, child) {
+    var fileDiff = ref.watch(fileDiffProvider);
+    var zipOne = ref.watch(zipOneProvider);
+    if (zipOne['last_modified_time'] != '' && fileDiff['whoIsNewer'] == 1) {
+      return Text('${zipOne['last_modified_time']} * newer');
+    } else {
+      return Text(zipOne['last_modified_time']);
+    }
+  });
+}
+
+Widget _getDisplayTwo() {
+  return Consumer(builder: (context, ref, child) {
+    var fileDiff = ref.watch(fileDiffProvider);
+    var zipTwo = ref.watch(zipTwoProvider);
+    if (zipTwo['last_modified_time'] != '' && fileDiff['whoIsNewer'] == 2) {
+      return Text('${zipTwo['last_modified_time']} * newer');
+    } else {
+      return Text(zipTwo['last_modified_time']);
+    }
+  });
 }
