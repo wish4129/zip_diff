@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:archive/archive_io.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';

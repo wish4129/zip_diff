@@ -71,19 +71,16 @@ class _MyAppState extends ConsumerState<MyApp> {
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 12.0),
+            Padding(
+              padding: const EdgeInsets.only(top: 12.0),
               child:
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Center(
                   child: Text(
                     'Files Difference',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: defaultTheme.textTheme.bodyLarge,
                   ),
-                )
+                ),
               ]),
             ),
             Padding(
@@ -130,6 +127,9 @@ class _MyAppState extends ConsumerState<MyApp> {
 }
 
 void onPressed(zipOne, zipTwo, WidgetRef ref) {
+  if (zipOne['file_path'] == "" || zipTwo['file_path'] == "") {
+    return;
+  }
   final file1InputStream = InputFileStream(zipOne['file_path']);
   final archive1 = ZipDecoder().decodeBuffer(file1InputStream);
   final file2InputStream = InputFileStream(zipTwo['file_path']);

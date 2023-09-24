@@ -8,10 +8,14 @@ ThemeData defaultTheme = ThemeData(
     ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(
-        color: Color.fromARGB(255, 34, 40, 49),
-      ),
+          color: Color.fromARGB(255, 57, 62, 70),
+          fontSize: 30.0,
+          fontFamily: 'Manrope',
+          fontWeight: FontWeight.w900),
       bodySmall: TextStyle(
-        color: Color.fromARGB(255, 34, 40, 49),
+        color: Color.fromARGB(255, 57, 62, 70),
+        fontSize: 12,
+        fontFamily: 'Manrope',
       ),
     ),
     buttonTheme: const ButtonThemeData(

@@ -26,6 +26,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Manrope
+      fonts:
+        - asset: fonts/Manrope.ttf
 
 flutter_launcher_icons:
   image_path: "assets/icon.png"
