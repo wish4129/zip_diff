@@ -79,12 +79,9 @@ class _MyAppState extends ConsumerState<MyApp> {
                       padding: const EdgeInsets.only(right: 10.0),
                       child: ListView(shrinkWrap: true, children: [
                         for (var item in ref.watch(fileDiffProvider)['common'])
-                          ListTile(title: Text(item)),
+                          SizedBox(height: 20, child: Text(item)),
                         for (var item in ref.watch(fileDiffProvider)['list1'])
-                          ListTile(
-                              tileColor:
-                                  const Color.fromARGB(255, 208, 220, 227),
-                              title: Text('*$item'))
+                          SizedBox(height: 20, child: Text('*$item')),
                       ]),
                     ),
                   ),
@@ -94,12 +91,9 @@ class _MyAppState extends ConsumerState<MyApp> {
                       padding: const EdgeInsets.only(left: 10.0),
                       child: ListView(shrinkWrap: true, children: [
                         for (var item in ref.watch(fileDiffProvider)['common'])
-                          ListTile(title: Text(item)),
+                          SizedBox(height: 20, child: Text(item)),
                         for (var item in ref.watch(fileDiffProvider)['list2'])
-                          ListTile(
-                              tileColor:
-                                  const Color.fromARGB(255, 208, 220, 227),
-                              title: Text('*$item'))
+                          SizedBox(height: 20, child: Text('*$item')),
                       ]),
                     ),
                   ),
