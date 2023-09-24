@@ -6,6 +6,7 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:zip_diff/file_dff_provider.dart';
 import 'package:zip_diff/zip_file_provider.dart';
 
@@ -70,9 +71,9 @@ void _updateProvider(provider, WidgetRef ref, XFile file, int length) async {
   ref.watch(provider.notifier).updateSize(await _getFileSize(file.path));
   ref.watch(provider.notifier).updateFilePath(file.path);
   ref.watch(provider.notifier).updateFileCount(length);
-  ref
-      .watch(provider.notifier)
-      .updateLastModifiedTime((await file.lastModified()).toIso8601String());
+  final date =
+      DateFormat('yyyy-MM-dd hh:mm a').format(await file.lastModified());
+  ref.watch(provider.notifier).updateLastModifiedTime(date);
 }
 
 Future<int> _getFileSize(String path) async {
@@ -85,7 +86,7 @@ String formatFileSize(int fileSizeInBytes) {
   const int megabyte = kilobyte * 1024;
   const int gigabyte = megabyte * 1024;
   const int terabyte = gigabyte * 1024;
-
+  if (fileSizeInBytes == 0) return '';
   if (fileSizeInBytes >= terabyte) {
     return '${(fileSizeInBytes / terabyte).toStringAsFixed(2)} TB';
   } else if (fileSizeInBytes >= gigabyte) {
@@ -168,9 +169,10 @@ Widget getDisplayOne() {
     var fileDiff = ref.watch(fileDiffProvider);
     var zipOne = ref.watch(zipOneProvider);
     if (zipOne['last_modified_time'] != '' && fileDiff['whoIsNewer'] == 1) {
-      return Text('${zipOne['last_modified_time']} * newer');
+      return Text('${zipOne['last_modified_time']} * newer',
+          textAlign: TextAlign.center);
     } else {
-      return Text(zipOne['last_modified_time']);
+      return Text(zipOne['last_modified_time'], textAlign: TextAlign.center);
     }
   });
 }
@@ -180,9 +182,10 @@ Widget getDisplayTwo() {
     var fileDiff = ref.watch(fileDiffProvider);
     var zipTwo = ref.watch(zipTwoProvider);
     if (zipTwo['last_modified_time'] != '' && fileDiff['whoIsNewer'] == 2) {
-      return Text('${zipTwo['last_modified_time']} * newer');
+      return Text('${zipTwo['last_modified_time']} * newer',
+          textAlign: TextAlign.center);
     } else {
-      return Text(zipTwo['last_modified_time']);
+      return Text(zipTwo['last_modified_time'], textAlign: TextAlign.center);
     }
   });
 }

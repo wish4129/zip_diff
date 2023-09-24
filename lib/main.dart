@@ -49,65 +49,45 @@ class _MyAppState extends ConsumerState<MyApp> {
                 children: [
                   TableRow(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 4.0),
-                        child: Text('Name'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(zipOne['name']),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(zipTwo['name']),
-                      ),
+                      Text(zipOne['name'], textAlign: TextAlign.center),
+                      const Text('Name', textAlign: TextAlign.center),
+                      Text(zipTwo['name'], textAlign: TextAlign.center),
                     ],
                   ),
                   TableRow(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 4.0),
-                        child: Text('Size'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(formatFileSize(zipOne['size'])),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(formatFileSize(zipTwo['size'])),
-                      ),
+                      Text(formatFileSize(zipOne['size']),
+                          textAlign: TextAlign.center),
+                      const Text('Size', textAlign: TextAlign.center),
+                      Text(formatFileSize(zipTwo['size']),
+                          textAlign: TextAlign.center),
                     ],
                   ),
                   TableRow(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 4.0),
-                        child: Text('Last Modified Time'),
+                      getDisplayOne(),
+                      const Text(
+                        'Last Modified Time',
+                        textAlign: TextAlign.center,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: getDisplayOne(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: getDisplayTwo(),
-                      ),
+                      getDisplayTwo(),
                     ],
                   ),
                   TableRow(children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 4.0),
-                      child: Text('Total Files'),
+                    Text(
+                        zipOne['file_count'] != 0
+                            ? zipOne['file_count'].toString()
+                            : '',
+                        textAlign: TextAlign.center),
+                    const Text(
+                      'Total Files',
+                      textAlign: TextAlign.center,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
-                      child: Text(zipOne['file_count'].toString()),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
-                      child: Text(zipTwo['file_count'].toString()),
-                    ),
+                    Text(
+                        zipTwo['file_count'] != 0
+                            ? zipTwo['file_count'].toString()
+                            : '',
+                        textAlign: TextAlign.center),
                   ])
                 ],
               ),
