@@ -69,6 +69,21 @@ class _MyAppState extends ConsumerState<MyApp> {
                 ],
               ),
             ),
+            const Padding(
+              padding: EdgeInsets.only(top: 12.0),
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Center(
+                  child: Text(
+                    'Files Diff',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              ]),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
               child: Row(
