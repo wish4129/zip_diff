@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:zip_diff/default_theme.dart';
 import 'package:zip_diff/drag_drop.dart';
 import 'package:archive/archive_io.dart';
@@ -180,8 +181,12 @@ void onPressed(zipOne, zipTwo, WidgetRef ref) {
   }
 
   List<String> common = getSimilarFiles(archive1.files, archive2.files);
-  var date1 = DateTime.parse(ref.watch(zipOneProvider)['last_modified_time']);
-  var date2 = DateTime.parse(ref.watch(zipTwoProvider)['last_modified_time']);
+  var date1 = DateFormat("yyyy-MM-dd hh:mm a")
+      .parse(ref.watch(zipOneProvider)['last_modified_time']);
+  var date2 = DateFormat("yyyy-MM-dd hh:mm a")
+      .parse(ref.watch(zipTwoProvider)['last_modified_time']);
+  // var date1 = DateTime.parse(ref.watch(zipOneProvider)['last_modified_time'],);
+  // var date2 = DateTime.parse(ref.watch(zipTwoProvider)['last_modified_time']);
   int whoIsNewer;
   if (date1.isAfter(date2)) {
     whoIsNewer = 1;

@@ -72,7 +72,7 @@ void _updateProvider(provider, WidgetRef ref, XFile file, int length) async {
   ref.watch(provider.notifier).updateFilePath(file.path);
   ref.watch(provider.notifier).updateFileCount(length);
   final date =
-      DateFormat('yyyy-MM-dd hh:mm a').format(await file.lastModified());
+      DateFormat("yyyy-MM-dd hh:mm a").format(await file.lastModified());
   ref.watch(provider.notifier).updateLastModifiedTime(date);
 }
 
