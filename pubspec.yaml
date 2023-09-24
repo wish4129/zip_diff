@@ -12,6 +12,7 @@ dependencies:
   cross_file: ^0.3.3+5
   cupertino_icons: ^1.0.2
   desktop_drop: ^0.4.3
+  file_picker: ^5.5.0
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1

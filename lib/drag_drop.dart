@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:archive/archive_io.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:desktop_drop/desktop_drop.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zip_diff/file_dff_provider.dart';
@@ -86,6 +89,13 @@ Widget showNames(DragNDropWidget widget, bool dragging) {
     return Consumer(builder: (context, ref, child) {
       var zipOne = ref.watch(zipOneProvider);
       return TextField(
+        onTap: () async {
+          FilePickerResult? result = await FilePicker.platform.pickFiles();
+          if (result != null) {
+            final file = XFile(result.files.single.path!);
+            _updateProvider(zipOneProvider, ref, file);
+          }
+        },
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
           labelText: 'Zip ${widget.index}',
@@ -102,6 +112,13 @@ Widget showNames(DragNDropWidget widget, bool dragging) {
     return Consumer(builder: (context, ref, child) {
       var zipTwo = ref.watch(zipTwoProvider);
       return TextField(
+        onTap: () async {
+          FilePickerResult? result = await FilePicker.platform.pickFiles();
+          if (result != null) {
+            final file = XFile(result.files.single.path!);
+            _updateProvider(zipTwoProvider, ref, file);
+          }
+        },
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
           labelText: 'Zip ${widget.index}',
