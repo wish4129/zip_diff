@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zip_diff/default_theme.dart';
 import 'package:zip_diff/drag_drop.dart';
 import 'package:archive/archive_io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,6 +27,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     var zipOne = ref.watch(zipOneProvider);
     var zipTwo = ref.watch(zipTwoProvider);
     return MaterialApp(
+      theme: defaultTheme,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Center(
@@ -75,7 +77,7 @@ class _MyAppState extends ConsumerState<MyApp> {
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Center(
                   child: Text(
-                    'Files Diff',
+                    'Files Difference',
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -120,7 +122,6 @@ class _MyAppState extends ConsumerState<MyApp> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () => onPressed(zipOne, zipTwo, ref),
-          backgroundColor: const Color.fromARGB(255, 252, 185, 56),
           child: const Icon(Icons.compare),
         ),
       ),
