@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:archive/archive_io.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
@@ -30,9 +31,23 @@ class _DragNDropWidgetState extends ConsumerState<DragNDropWidget> {
     return DropTarget(
         onDragDone: (detail) async {
           if (widget.index == 1) {
-            _updateProvider(zipOneProvider, ref, detail.files[0]);
+            final filePath = detail.files[0].path;
+            final file1InputStream = InputFileStream(filePath);
+            final archive1 = ZipDecoder().decodeBuffer(file1InputStream);
+            final files = archive1.files
+                .where((file) => !file.name.endsWith('/'))
+                .toList();
+            final length = files.length;
+            _updateProvider(zipOneProvider, ref, detail.files[0], length);
           } else {
-            _updateProvider(zipTwoProvider, ref, detail.files[0]);
+            final filePath = detail.files[0].path;
+            final file1InputStream = InputFileStream(filePath);
+            final archive2 = ZipDecoder().decodeBuffer(file1InputStream);
+            final files = archive2.files
+                .where((file) => !file.name.endsWith('/'))
+                .toList();
+            final length = files.length;
+            _updateProvider(zipTwoProvider, ref, detail.files[0], length);
           }
         },
         onDragUpdated: (details) => setState(() {}),
@@ -49,11 +64,12 @@ class _DragNDropWidgetState extends ConsumerState<DragNDropWidget> {
   }
 }
 
-void _updateProvider(provider, ref, file) async {
+void _updateProvider(provider, WidgetRef ref, XFile file, int length) async {
   ref.watch(provider.notifier).updateName(file.name);
   ref.watch(provider.notifier).updateFilePath(file.path);
   ref.watch(provider.notifier).updateSize(await _getFileSize(file.path));
   ref.watch(provider.notifier).updateFilePath(file.path);
+  ref.watch(provider.notifier).updateFileCount(length);
   ref
       .watch(provider.notifier)
       .updateLastModifiedTime((await file.lastModified()).toIso8601String());
@@ -91,8 +107,15 @@ Widget showNames(DragNDropWidget widget, bool dragging) {
         onTap: () async {
           FilePickerResult? result = await FilePicker.platform.pickFiles();
           if (result != null) {
-            final file = XFile(result.files.single.path!);
-            _updateProvider(zipOneProvider, ref, file);
+            final filePath = result.files.single.path!;
+            final file = XFile(filePath);
+            final file1InputStream = InputFileStream(filePath);
+            final archive1 = ZipDecoder().decodeBuffer(file1InputStream);
+            final files = archive1.files
+                .where((file) => !file.name.endsWith('/'))
+                .toList();
+            final length = files.length;
+            _updateProvider(zipOneProvider, ref, file, length);
           }
         },
         decoration: InputDecoration(
@@ -114,8 +137,15 @@ Widget showNames(DragNDropWidget widget, bool dragging) {
         onTap: () async {
           FilePickerResult? result = await FilePicker.platform.pickFiles();
           if (result != null) {
-            final file = XFile(result.files.single.path!);
-            _updateProvider(zipTwoProvider, ref, file);
+            final filePath = result.files.single.path!;
+            final file = XFile(filePath);
+            final file1InputStream = InputFileStream(filePath);
+            final archive2 = ZipDecoder().decodeBuffer(file1InputStream);
+            final files = archive2.files
+                .where((file) => !file.name.endsWith('/'))
+                .toList();
+            final length = files.length;
+            _updateProvider(zipTwoProvider, ref, file, length);
           }
         },
         decoration: InputDecoration(

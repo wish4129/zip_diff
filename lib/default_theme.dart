@@ -9,7 +9,7 @@ ThemeData defaultTheme = ThemeData(
     textTheme: const TextTheme(
       bodyLarge: TextStyle(
           color: Color.fromARGB(255, 57, 62, 70),
-          fontSize: 30.0,
+          fontSize: 25.0,
           fontFamily: 'Manrope',
           fontWeight: FontWeight.w900),
       bodySmall: TextStyle(

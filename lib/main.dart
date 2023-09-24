@@ -49,25 +49,66 @@ class _MyAppState extends ConsumerState<MyApp> {
                 children: [
                   TableRow(
                     children: [
-                      const Text('Name'),
-                      Text(zipOne['name']),
-                      Text(zipTwo['name']),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 4.0),
+                        child: Text('Name'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(zipOne['name']),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(zipTwo['name']),
+                      ),
                     ],
                   ),
                   TableRow(
                     children: [
-                      const Text('Size'),
-                      Text(formatFileSize(zipOne['size'])),
-                      Text(formatFileSize(zipTwo['size'])),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 4.0),
+                        child: Text('Size'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(formatFileSize(zipOne['size'])),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(formatFileSize(zipTwo['size'])),
+                      ),
                     ],
                   ),
                   TableRow(
                     children: [
-                      const Text('Last Modified Time'),
-                      getDisplayOne(),
-                      getDisplayTwo(),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 4.0),
+                        child: Text('Last Modified Time'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: getDisplayOne(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: getDisplayTwo(),
+                      ),
                     ],
                   ),
+                  TableRow(children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 4.0),
+                      child: Text('Total Files'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4.0),
+                      child: Text(zipOne['file_count'].toString()),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4.0),
+                      child: Text(zipTwo['file_count'].toString()),
+                    ),
+                  ])
                 ],
               ),
             ),
