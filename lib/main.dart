@@ -35,14 +35,17 @@ class _MyAppState extends ConsumerState<MyApp> {
       home: Scaffold(
         body: Center(
           child: Column(children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                DragNDropWidget(
-                    index: 1, name: 'Drop zip here', display: zipOne['name']),
-                DragNDropWidget(
-                    index: 2, name: 'Drop zip here', display: zipTwo['name']),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  DragNDropWidget(
+                      index: 1, name: 'Drop zip here', display: zipOne['name']),
+                  DragNDropWidget(
+                      index: 2, name: 'Drop zip here', display: zipTwo['name']),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
@@ -97,19 +100,21 @@ class _MyAppState extends ConsumerState<MyApp> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 12.0),
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Center(
-                  child: Text(
-                    'Files Difference',
-                    style: defaultTheme.textTheme.bodyLarge,
-                  ),
-                ),
-              ]),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('Zip 1', style: defaultTheme.textTheme.bodyLarge),
+                    Text(
+                      'Files Difference',
+                      style: defaultTheme.textTheme.bodyLarge,
+                    ),
+                    Text('Zip 2', style: defaultTheme.textTheme.bodyLarge),
+                  ]),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20.0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Checkbox(
                     value: ui['onlyShowDiff'],
@@ -129,14 +134,14 @@ class _MyAppState extends ConsumerState<MyApp> {
                 children: [
                   Expanded(
                     child: Container(
-                      height: 360,
+                      height: 330,
                       padding: const EdgeInsets.only(right: 10.0),
                       child: listOne(ref),
                     ),
                   ),
                   Expanded(
                     child: Container(
-                      height: 360,
+                      height: 330,
                       padding: const EdgeInsets.only(left: 10.0),
                       child: listTwo(ref),
                     ),
