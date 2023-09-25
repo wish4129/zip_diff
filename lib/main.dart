@@ -4,7 +4,8 @@ import 'package:zip_diff/default_theme.dart';
 import 'package:zip_diff/drag_drop.dart';
 import 'package:archive/archive_io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zip_diff/file_dff_provider.dart';
+import 'package:zip_diff/file_diff_provider.dart';
+import 'package:zip_diff/ui_provider.dart';
 import 'package:zip_diff/zip_file_provider.dart';
 
 void main() {
@@ -27,6 +28,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     var zipOne = ref.watch(zipOneProvider);
     var zipTwo = ref.watch(zipTwoProvider);
+    var ui = ref.watch(uiProvider);
     return MaterialApp(
       theme: defaultTheme,
       debugShowCheckedModeBanner: false,
@@ -106,19 +108,35 @@ class _MyAppState extends ConsumerState<MyApp> {
               ]),
             ),
             Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: ui['onlyShowDiff'],
+                    onChanged: (bool? value) {
+                      ref.watch(uiProvider.notifier).updateOnlyShowDiff(value!);
+                      ref.read(fileDiffProvider.notifier).updateList1(value);
+                      ref.read(fileDiffProvider.notifier).updateList2(value);
+                    },
+                  ),
+                  const Text('Only show different files'),
+                ],
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
-                      height: 400,
+                      height: 360,
                       padding: const EdgeInsets.only(right: 10.0),
                       child: listOne(ref),
                     ),
                   ),
                   Expanded(
                     child: Container(
-                      height: 400,
+                      height: 360,
                       padding: const EdgeInsets.only(left: 10.0),
                       child: listTwo(ref),
                     ),
@@ -159,15 +177,11 @@ void onPressed(zipOne, zipTwo, WidgetRef ref) {
   List<String> unique2 = [];
 
   for (var file in files1) {
-    if (!files2.contains(file)) {
-      unique1.add(file);
-    }
+    if (!files2.contains(file)) unique1.add(file);
   }
 
   for (var file in files2) {
-    if (!files1.contains(file)) {
-      unique2.add(file);
-    }
+    if (!files1.contains(file)) unique2.add(file);
   }
 
   List<String> common = getSimilarFiles(archive1.files, archive2.files);

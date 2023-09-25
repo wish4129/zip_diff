@@ -7,7 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:zip_diff/file_dff_provider.dart';
+import 'package:zip_diff/file_diff_provider.dart';
 import 'package:zip_diff/zip_file_provider.dart';
 
 class DragNDropWidget extends ConsumerStatefulWidget {
