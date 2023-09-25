@@ -113,24 +113,14 @@ class _MyAppState extends ConsumerState<MyApp> {
                     child: Container(
                       height: 400,
                       padding: const EdgeInsets.only(right: 10.0),
-                      child: ListView(shrinkWrap: true, children: [
-                        for (var item in ref.watch(fileDiffProvider)['common'])
-                          SizedBox(height: 20, child: Text(item)),
-                        for (var item in ref.watch(fileDiffProvider)['list1'])
-                          SizedBox(height: 20, child: Text('*$item')),
-                      ]),
+                      child: listOne(ref),
                     ),
                   ),
                   Expanded(
                     child: Container(
                       height: 400,
                       padding: const EdgeInsets.only(left: 10.0),
-                      child: ListView(shrinkWrap: true, children: [
-                        for (var item in ref.watch(fileDiffProvider)['common'])
-                          SizedBox(height: 20, child: Text(item)),
-                        for (var item in ref.watch(fileDiffProvider)['list2'])
-                          SizedBox(height: 20, child: Text('*$item')),
-                      ]),
+                      child: listTwo(ref),
                     ),
                   ),
                 ],
@@ -185,8 +175,6 @@ void onPressed(zipOne, zipTwo, WidgetRef ref) {
       .parse(ref.watch(zipOneProvider)['last_modified_time']);
   var date2 = DateFormat("yyyy-MM-dd hh:mm a")
       .parse(ref.watch(zipTwoProvider)['last_modified_time']);
-  // var date1 = DateTime.parse(ref.watch(zipOneProvider)['last_modified_time'],);
-  // var date2 = DateTime.parse(ref.watch(zipTwoProvider)['last_modified_time']);
   int whoIsNewer;
   if (date1.isAfter(date2)) {
     whoIsNewer = 1;
@@ -196,6 +184,32 @@ void onPressed(zipOne, zipTwo, WidgetRef ref) {
   ref
       .read(fileDiffProvider.notifier)
       .updateList(files1, files2, common, unique1, unique2, whoIsNewer);
+}
+
+Widget listOne(ref) {
+  var fileDiff = ref.watch(fileDiffProvider);
+  List<Widget> list = [];
+  for (var item in fileDiff['list1']) {
+    if (fileDiff['common'].contains(item)) {
+      list.add(SizedBox(height: 20, child: Text(item)));
+    } else {
+      list.add(SizedBox(height: 20, child: Text('*$item')));
+    }
+  }
+  return ListView(children: list);
+}
+
+Widget listTwo(ref) {
+  var fileDiff = ref.watch(fileDiffProvider);
+  List<Widget> list = [];
+  for (var item in fileDiff['list2']) {
+    if (fileDiff['common'].contains(item)) {
+      list.add(SizedBox(height: 20, child: Text(item)));
+    } else {
+      list.add(SizedBox(height: 20, child: Text('*$item')));
+    }
+  }
+  return ListView(children: list);
 }
 
 List<String> getSimilarFiles(

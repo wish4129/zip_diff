@@ -15,12 +15,12 @@ class FileDiff extends Notifier<dynamic> {
 
   updateList(List<String> ori1, List<String> ori2, List<String> common,
       List<String> list1, List<String> list2, int whoIsNewer) {
-    return {
+    state = {
       'ori1': ori1,
       'ori2': ori2,
       'common': common,
-      'list1': list1,
-      'list2': list2,
+      'list1': [...common, ...list1],
+      'list2': [...common, ...list2],
       'whoIsNewer': whoIsNewer
     };
   }
