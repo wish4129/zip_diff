@@ -28,6 +28,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     var zipOne = ref.watch(zipOneProvider);
     var zipTwo = ref.watch(zipTwoProvider);
+    var fileDiff = ref.watch(fileDiffProvider);
     var ui = ref.watch(uiProvider);
     return MaterialApp(
       theme: defaultTheme,
@@ -122,6 +123,20 @@ class _MyAppState extends ConsumerState<MyApp> {
                       ref.watch(uiProvider.notifier).updateOnlyShowDiff(value!);
                       ref.read(fileDiffProvider.notifier).updateList1(value);
                       ref.read(fileDiffProvider.notifier).updateList2(value);
+                      final commonLength = fileDiff['common'].length;
+                      final uniqueLength1 = fileDiff['unique1'].length;
+                      final uniqueLength2 = fileDiff['unique2'].length;
+                      var length1 = 0;
+                      var length2 = 0;
+                      if (value == false) {
+                        length1 = commonLength + uniqueLength1;
+                        length2 = commonLength + uniqueLength2;
+                      } else {
+                        length1 = commonLength;
+                        length2 = commonLength;
+                      }
+                      ref.read(uiProvider.notifier).defineCheckBoxes1(length1);
+                      ref.read(uiProvider.notifier).defineCheckBoxes2(length2);
                     },
                   ),
                   const Text('Only show different files'),
