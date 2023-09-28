@@ -309,14 +309,23 @@ void onExport(WidgetRef ref) async {
   final outDir = Directory('$docDir/out');
   final outFiles = outDir.listSync(recursive: true);
   for (var file in outFiles) {
-    if (file is File) encoder.addFile(file);
+    if (file is File) {
+      final filePath = file.path;
+      final fileName = getRelativePath(filePath, docDir);
+      encoder.addFile(File(filePath), fileName);
+    }
   }
   encoder.close();
   outDir.deleteSync(recursive: true);
-
-  // open the directory that contains the zip file
-  // final directory = await getApplicationDocumentsDirectory();
   Process.run('open', [docDir]);
+}
+
+String getRelativePath(String filePath, String docDir) {
+  List<String> filePathParts = filePath.split('/');
+  int outIndex = filePathParts.indexWhere((part) => part == 'out');
+  List<String> relativeParts = filePathParts.sublist(outIndex + 1);
+  String relativePath = relativeParts.join('/');
+  return relativePath;
 }
 
 Widget listOne(WidgetRef ref, ui) {
