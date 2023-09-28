@@ -136,14 +136,14 @@ class _MyAppState extends ConsumerState<MyApp> {
                     child: Container(
                       height: 330,
                       padding: const EdgeInsets.only(right: 10.0),
-                      child: listOne(ref),
+                      child: listOne(ref, ui),
                     ),
                   ),
                   Expanded(
                     child: Container(
                       height: 330,
                       padding: const EdgeInsets.only(left: 10.0),
-                      child: listTwo(ref),
+                      child: listTwo(ref, ui),
                     ),
                   ),
                 ],
@@ -203,29 +203,80 @@ void onPressed(zipOne, zipTwo, WidgetRef ref) {
   ref
       .read(fileDiffProvider.notifier)
       .updateList(files1, files2, common, unique1, unique2, whoIsNewer);
+
+  ref.read(uiProvider.notifier).defineCheckBoxes1(files1.length);
+  ref.read(uiProvider.notifier).defineCheckBoxes2(files2.length);
 }
 
-Widget listOne(ref) {
+Widget listOne(WidgetRef ref, ui) {
   var fileDiff = ref.watch(fileDiffProvider);
   List<Widget> list = [];
   for (var item in fileDiff['list1']) {
     if (fileDiff['common'].contains(item)) {
-      list.add(SizedBox(height: 20, child: Text(item)));
+      list.add(SizedBox(
+          height: 20,
+          child: Row(
+            children: [
+              Checkbox(
+                  value: ui['checkBoxes1'][fileDiff['list1'].indexOf(item)],
+                  onChanged: (bool? value) {
+                    ref.read(uiProvider.notifier).updateCheckBoxes1(
+                        fileDiff['list1'].indexOf(item), value!, true);
+                  }),
+              Text(item),
+            ],
+          )));
     } else {
-      list.add(SizedBox(height: 20, child: Text('*$item')));
+      list.add(SizedBox(
+          height: 20,
+          child: Row(
+            children: [
+              Checkbox(
+                  value: ui['checkBoxes1'][fileDiff['list1'].indexOf(item)],
+                  onChanged: (bool? value) {
+                    ref.read(uiProvider.notifier).updateCheckBoxes1(
+                        fileDiff['list1'].indexOf(item), value!, false);
+                  }),
+              Text('*$item'),
+            ],
+          )));
     }
   }
   return ListView(children: list);
 }
 
-Widget listTwo(ref) {
+Widget listTwo(WidgetRef ref, ui) {
   var fileDiff = ref.watch(fileDiffProvider);
   List<Widget> list = [];
   for (var item in fileDiff['list2']) {
     if (fileDiff['common'].contains(item)) {
-      list.add(SizedBox(height: 20, child: Text(item)));
+      list.add(SizedBox(
+          height: 20,
+          child: Row(
+            children: [
+              Checkbox(
+                  value: ui['checkBoxes2'][fileDiff['list2'].indexOf(item)],
+                  onChanged: (bool? value) {
+                    ref.read(uiProvider.notifier).updateCheckBoxes2(
+                        fileDiff['list2'].indexOf(item), value!, true);
+                  }),
+              Text(item),
+            ],
+          )));
     } else {
-      list.add(SizedBox(height: 20, child: Text('*$item')));
+      list.add(SizedBox(
+          height: 20,
+          child: Row(
+            children: [
+              Checkbox(
+                  value: ui['checkBoxes2'][fileDiff['list2'].indexOf(item)],
+                  onChanged: (bool? value) {
+                    ref.read(uiProvider.notifier).updateCheckBoxes2(
+                        fileDiff['list2'].indexOf(item), value!, false);
+                  }),
+              Text('*$item'),
+            ],
+          )));
     }
   }
   return ListView(children: list);
