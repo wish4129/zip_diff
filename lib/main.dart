@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:zip_diff/default_theme.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zip_diff/file_diff_provider.dart';
 import 'package:zip_diff/ui_provider.dart';
 import 'package:zip_diff/zip_file_provider.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(
@@ -144,39 +147,68 @@ class _MyAppState extends ConsumerState<MyApp> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+              padding: const EdgeInsets.only(top: 12.0, left: 20, right: 20),
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
-                      height: 330,
+                      color: Colors.grey[200],
+                      height: 260,
                       padding: const EdgeInsets.only(right: 10.0),
                       child: listOne(ref, ui),
                     ),
                   ),
                   Expanded(
                     child: Container(
-                      height: 330,
+                      color: Colors.grey[300],
+                      height: 260,
                       padding: const EdgeInsets.only(left: 10.0),
                       child: listTwo(ref, ui),
                     ),
                   ),
                 ],
               ),
-            )
+            ),
+            // Row with 2 round buttons, 1 with compare icon, 1 with export icon
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0, bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => onCompare(zipOne, zipTwo, ref),
+                    child: const Column(
+                      children: [
+                        Icon(Icons.compare),
+                        Text('Compare'),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => onExport(ref),
+                    child: const Column(
+                      children: [
+                        Icon(Icons.folder_zip),
+                        Text('Export'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ]),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => onPressed(zipOne, zipTwo, ref),
-          child: const Icon(Icons.compare),
-        ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () => onPressed(zipOne, zipTwo, ref),
+        //   child: const Icon(Icons.compare),
+        // ),
       ),
     );
   }
 }
 
-void onPressed(zipOne, zipTwo, WidgetRef ref) {
+void onCompare(zipOne, zipTwo, WidgetRef ref) {
   if (zipOne['file_path'] == "" || zipTwo['file_path'] == "") {
     return;
   }
@@ -221,6 +253,70 @@ void onPressed(zipOne, zipTwo, WidgetRef ref) {
 
   ref.read(uiProvider.notifier).defineCheckBoxes1(files1.length);
   ref.read(uiProvider.notifier).defineCheckBoxes2(files2.length);
+}
+
+void onExport(WidgetRef ref) async {
+  var ui = ref.watch(uiProvider);
+  var fileDiff = ref.watch(fileDiffProvider);
+  var zipOne = ref.watch(zipOneProvider);
+  var zipTwo = ref.watch(zipTwoProvider);
+  List<String> filesToZip = [];
+  for (var i = 0; i < ui['checkBoxes1'].length; i++) {
+    if (ui['checkBoxes1'][i] == true) {
+      filesToZip.add(fileDiff['list1'][i]);
+    }
+  }
+  for (var i = 0; i < ui['checkBoxes2'].length; i++) {
+    // don't add the file if it's already in the array
+    if (ui['checkBoxes2'][i] == true &&
+        !filesToZip.contains(fileDiff['list2'][i])) {
+      filesToZip.add(fileDiff['list2'][i]);
+    }
+  }
+
+  if (filesToZip.isEmpty) return;
+
+  final inputStream1 = InputFileStream(zipOne['file_path']);
+  final archive1 = ZipDecoder().decodeBuffer(inputStream1);
+  final inputStream2 = InputFileStream(zipTwo['file_path']);
+  final archive2 = ZipDecoder().decodeBuffer(inputStream2);
+
+  final docDir = (await getApplicationDocumentsDirectory()).path;
+  // add files from zip1 to out folder
+  for (var file in archive1.files) {
+    if (filesToZip.contains(file.name)) {
+      if (file.isFile) {
+        final outputStream = OutputFileStream('$docDir/out/${file.name}');
+        file.writeContent(outputStream);
+        outputStream.close();
+      }
+    }
+  }
+
+  // add files from zip2 to out folder
+  for (var file in archive2.files) {
+    if (filesToZip.contains(file.name)) {
+      if (file.isFile) {
+        final outputStream = OutputFileStream('$docDir/out/${file.name}');
+        file.writeContent(outputStream);
+        outputStream.close();
+      }
+    }
+  }
+
+  var encoder = ZipFileEncoder();
+  encoder.create('$docDir/export.zip');
+  final outDir = Directory('$docDir/out');
+  final outFiles = outDir.listSync(recursive: true);
+  for (var file in outFiles) {
+    if (file is File) encoder.addFile(file);
+  }
+  encoder.close();
+  outDir.deleteSync(recursive: true);
+
+  // open the directory that contains the zip file
+  // final directory = await getApplicationDocumentsDirectory();
+  Process.run('open', [docDir]);
 }
 
 Widget listOne(WidgetRef ref, ui) {
