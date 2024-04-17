@@ -15,11 +15,10 @@ class DragNDropWidget extends ConsumerStatefulWidget {
   final String name;
   final String display;
   const DragNDropWidget(
-      {Key? key,
+      {super.key,
       required this.index,
       required this.name,
-      required this.display})
-      : super(key: key);
+      required this.display});
 
   @override
   ConsumerState<DragNDropWidget> createState() => _DragNDropWidgetState();
